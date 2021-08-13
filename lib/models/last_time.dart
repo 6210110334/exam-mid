@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'last_time.g.dart';
+
 @HiveType(typeId: 0)
 class LastTime extends HiveObject {
   @HiveField(0)
@@ -10,6 +12,4 @@ class LastTime extends HiveObject {
 
   @HiveField(2)
   late String mode;
-
-  LastTime(this.time, this.title, this.mode);
 }
