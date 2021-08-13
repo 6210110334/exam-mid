@@ -33,6 +33,12 @@ class LastTimeState extends State<LastTimePage> {
               final data = box.values.toList().cast<LastTime>();
               final listLastTime = <LastTime>[];
               listLastTime.addAll(data);
+              if (dropdown != 'ทั้งหมด')
+                for (int i = 0; i < listLastTime.length; i++) {
+                  if (dropdown != listLastTime[i].mode) {
+                    listLastTime.removeAt(i);
+                  }
+                }
               listLastTime.sort((b, a) => a.time.compareTo(b.time));
 
               return Center(
@@ -164,7 +170,6 @@ class LastTimeState extends State<LastTimePage> {
           tooltip: 'เพิ่มงาน',
           onPressed: () async {
             TextEditingController title = new TextEditingController();
-
             String chooseDropdown = 'ทำความสะอาด';
 
             showDialog(
