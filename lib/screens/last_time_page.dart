@@ -12,7 +12,7 @@ class LastTimePage extends StatefulWidget {
 }
 
 class LastTimeState extends State<LastTimePage> {
-  final TextEditingController _filter = new TextEditingController();
+  String dropdown = 'ทั้งหมด';
 
   @override
   void dispose() {
@@ -30,156 +30,187 @@ class LastTimeState extends State<LastTimePage> {
         body: ValueListenableBuilder<Box<LastTime>>(
             valueListenable: Boxes.getLastTime().listenable(),
             builder: (context, box, _) {
-              final listLastTime = box.values.toList().cast<LastTime>();
-              return Column(children: [
-                Container(
-                  height: 50,
-                  margin: EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        height: 40,
-                        width: 200,
-                        child: TextField(
-                          controller: _filter,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Search Mode'),
+              final data = box.values.toList().cast<LastTime>();
+              final listLastTime = <LastTime>[];
+              listLastTime.addAll(data);
+              listLastTime.sort((b, a) => a.time.compareTo(b.time));
+
+              return Center(
+                child: Column(children: [
+                  Container(
+                      height: 50,
+                      margin: EdgeInsets.all(20),
+                      child: DropdownButton<String>(
+                        value: dropdown,
+                        icon: const Icon(Icons.arrow_downward),
+                        style: const TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      FloatingActionButton(
-                        onPressed: () {
-                          // Add your onPressed code here!
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdown = newValue!;
+                          });
                         },
-                        child:
-                            Icon(IconData(0xe567, fontFamily: 'MaterialIcons')),
-                      )
-                    ],
+                        items: <String>[
+                          'ทั้งหมด',
+                          'ทำความสะอาด',
+                          'ซื้อของใช้',
+                          'ดูแลสวนครัว'
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      )),
+                  Container(
+                    height: 40,
+                    color: Colors.green[400],
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 20),
+                        Text('งานที่ทำ'),
+                        Spacer(),
+                        Text('เวลา'),
+                        SizedBox(width: 100)
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  height: 40,
-                  color: Colors.green[400],
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 20),
-                      Text('งานที่ทำ'),
-                      Spacer(),
-                      Text('เวลา'),
-                      SizedBox(width: 100)
-                    ],
-                  ),
-                ),
-                Expanded(
-                    child: listLastTime.length == 0
-                        ? Center(
-                            child: Text('ไม่มีสิ่งที่ต้องทำ'),
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.all(8),
-                            itemCount: listLastTime.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              LastTime lastTime = listLastTime[index];
-                              return Container(
-                                margin: EdgeInsets.only(bottom: 2),
-                                color: Colors.green[200],
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailLastTimePage(lastTime)),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 40,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    child: Row(
-                                      children: [
-                                        Text(lastTime.title),
-                                        Spacer(),
-                                        Text(lastTime.time
-                                            .toString()
-                                            .substring(0, 10)),
-                                        SizedBox(width: 20),
-                                        IconButton(
-                                          icon: Icon(Icons.delete),
-                                          iconSize: 24.0,
-                                          color: Colors.red,
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    AlertDialog(
-                                                      title: Text(
-                                                          'ต้องการลบหรือไม่'),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          child: const Text(
-                                                              'ยกเลิก'),
-                                                          onPressed: () async {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                        ),
-                                                        TextButton(
-                                                          child: const Text(
-                                                              'ยืนยัน'),
-                                                          onPressed: () async {
-                                                            await lastTime
-                                                                .delete();
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ));
-                                          },
-                                        ),
-                                      ],
+                  Expanded(
+                      child: listLastTime.length == 0
+                          ? Center(
+                              child: Text('ไม่มีสิ่งที่ต้องทำ'),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.all(8),
+                              itemCount: listLastTime.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                LastTime lastTime = listLastTime[index];
+                                return Container(
+                                  margin: EdgeInsets.only(bottom: 2),
+                                  color: Colors.green[200],
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailLastTimePage(lastTime)),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Row(
+                                        children: [
+                                          Text(lastTime.title),
+                                          Spacer(),
+                                          Text(lastTime.time
+                                              .toString()
+                                              .substring(0, 10)),
+                                          SizedBox(width: 20),
+                                          IconButton(
+                                            icon: Icon(Icons.delete),
+                                            iconSize: 24.0,
+                                            color: Colors.red,
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          AlertDialog(
+                                                            title: Text(
+                                                                'ต้องการลบหรือไม่'),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                child: const Text(
+                                                                    'ยกเลิก'),
+                                                                onPressed:
+                                                                    () async {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              ),
+                                                              TextButton(
+                                                                child: const Text(
+                                                                    'ยืนยัน'),
+                                                                onPressed:
+                                                                    () async {
+                                                                  await lastTime
+                                                                      .delete();
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ));
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }))
-              ]);
+                                );
+                              }))
+                ]),
+              );
             }),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           tooltip: 'เพิ่มงาน',
           onPressed: () async {
             TextEditingController title = new TextEditingController();
-            TextEditingController mode = new TextEditingController();
+
+            String chooseDropdown = 'ทำความสะอาด';
 
             showDialog(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                       title: Text('เพิ่มงานที่ทำ'),
                       content: Container(
-                        height: 150,
+                        height: 180,
                         child: Column(
                           children: [
                             TextField(
                               controller: title,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: 'tile'),
+                                  hintText: 'ชื่องาน'),
                             ),
                             SizedBox(height: 20),
-                            TextField(
-                              controller: mode,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'mode'),
-                            ),
+                            Container(
+                                height: 50,
+                                margin: EdgeInsets.all(20),
+                                child: DropdownButton<String>(
+                                  value: chooseDropdown,
+                                  icon: const Icon(Icons.arrow_downward),
+                                  style:
+                                      const TextStyle(color: Colors.deepPurple),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      chooseDropdown = newValue!;
+                                    });
+                                  },
+                                  items: <String>[
+                                    'ทำความสะอาด',
+                                    'ซื้อของใช้',
+                                    'ดูแลสวนครัว'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ))
                           ],
                         ),
                       ),
@@ -193,7 +224,7 @@ class LastTimeState extends State<LastTimePage> {
                         TextButton(
                           child: const Text('ยืนยัน'),
                           onPressed: () async {
-                            await addLastTime(title.text, mode.text);
+                            await addLastTime(title.text, chooseDropdown);
                             Navigator.pop(context);
                           },
                         ),

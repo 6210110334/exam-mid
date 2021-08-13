@@ -12,38 +12,42 @@ class DetailLastTimePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(lastTime.title),
       ),
-      body: Container(
-        margin: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text('Mode  :'),
-                SizedBox(
-                  width: 40,
-                ),
-                Text(lastTime.mode)
-              ],
-            ),
-            Row(
-              children: [
-                Text('Date  :'),
-                SizedBox(
-                  width: 40,
-                ),
-                Text(DateFormat('dd/MM/yyyy').format(lastTime.time).toString()),
-              ],
-            ),
-            Row(
-              children: [
-                Text('Time  :'),
-                SizedBox(
-                  width: 40,
-                ),
-                Text(lastTime.time.toString().substring(10, 16))
-              ],
-            )
-          ],
+      body: Center(
+        child: Container(
+          margin: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text('Mode  :'),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Text(lastTime.mode)
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Date  :'),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Text(DateFormat('dd/MM/yyyy')
+                      .format(lastTime.time)
+                      .toString()),
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Time  :'),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Text(lastTime.time.toString().substring(10, 16))
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
