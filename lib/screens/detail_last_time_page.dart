@@ -19,7 +19,7 @@ class DetailLastTimePage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text('Mode  :'),
+                  Text('หมวดหมู่  :'),
                   SizedBox(
                     width: 40,
                   ),
@@ -28,7 +28,7 @@ class DetailLastTimePage extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text('Date  :'),
+                  Text('วันที่  :'),
                   SizedBox(
                     width: 40,
                   ),
@@ -39,7 +39,7 @@ class DetailLastTimePage extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text('Time  :'),
+                  Text('เวลา :'),
                   SizedBox(
                     width: 40,
                   ),
