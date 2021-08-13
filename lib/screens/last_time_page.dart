@@ -11,6 +11,7 @@ class LastTimePage extends StatefulWidget {
 
 class LastTimeState extends State<LastTimePage> {
   late List<LastTime> listLastTime;
+  final TextEditingController _filter = new TextEditingController();
 
   @override
   void initState() {
@@ -24,77 +25,92 @@ class LastTimeState extends State<LastTimePage> {
         appBar: AppBar(
           title: Text('Exam MidTerm'),
         ),
-        body: Container(
-          // color: Colors.indigo[50],
-          child: Column(children: [
-            Container(
-              height: 50,
-              margin: EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: 40,
-                    width: 200,
-                    child: TextField(
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(), hintText: 'Search'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  FloatingActionButton(
-                    onPressed: () {
-                      // Add your onPressed code here!
+        body: Column(children: [
+          Container(
+            height: 50,
+            margin: EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: 40,
+                  width: 200,
+                  child: TextField(
+                    controller: _filter,
+                    onChanged: (value) {
+                      setState(() {
+                        _filter.text = value;
+                      });
                     },
-                    child: Icon(IconData(0xe567, fontFamily: 'MaterialIcons')),
-                  )
-                ],
-              ),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), hintText: 'Search Mode'),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    // Add your onPressed code here!
+                  },
+                  child: Icon(IconData(0xe567, fontFamily: 'MaterialIcons')),
+                )
+              ],
             ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  SizedBox(width: 20),
-                  Text('งานที่ทำ'),
-                  Spacer(),
-                  Text('เวลา'),
-                  SizedBox(width: 40)
-                ],
-              ),
+          ),
+          Container(
+            height: 40,
+            color: Colors.green[400],
+            margin: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                SizedBox(width: 20),
+                Text('งานที่ทำ'),
+                Spacer(),
+                Text('เวลา'),
+                SizedBox(width: 40)
+              ],
             ),
-            Expanded(
-                child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: listLastTime.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      LastTime lastTime = listLastTime[index];
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailLastTimePage(lastTime)),
-                          );
-                        },
-                        child: Container(
-                          height: 40,
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            children: [
-                              Text(lastTime.title),
-                              Spacer(),
-                              Text(lastTime.time.toString().substring(0, 10)),
-                            ],
+          ),
+          Expanded(
+              child: listLastTime.length == 0
+                  ? Center(
+                      child: Text('ไม่มีสิ่งที่ต้องทำ'),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: listLastTime.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        LastTime lastTime = listLastTime[index];
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 2),
+                          color: Colors.green[200],
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailLastTimePage(lastTime)),
+                              );
+                            },
+                            child: Container(
+                              height: 40,
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                children: [
+                                  Text(lastTime.title),
+                                  Spacer(),
+                                  Text(lastTime.time
+                                      .toString()
+                                      .substring(0, 10)),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      );
-                    }))
-          ]),
-        ),
+                        );
+                      }))
+        ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Add your onPressed code here!
@@ -103,7 +119,15 @@ class LastTimeState extends State<LastTimePage> {
             icon: const Icon(Icons.add),
             tooltip: 'Increase volume by 10',
             onPressed: () {
-              setState(() {});
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                        title: Text('เพิ่มงานที่ทำ'),
+                        content: Text('add'),
+                      ));
+              // setState(() {
+              //   listLastTime.add(LastTime(DateTime.now(), 'ซักผ้า', 'Home'));
+              // });
             },
           ),
         ));
