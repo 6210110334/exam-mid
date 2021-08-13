@@ -1,4 +1,4 @@
-import 'package:exam_mid/switch_page.dart';
+import 'package:exam_mid/screens/last_time_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,6 +13,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: SwitchPage());
+        home: LastTimePage());
   }
 }
