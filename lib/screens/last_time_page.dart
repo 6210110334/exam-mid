@@ -71,7 +71,7 @@ class LastTimeState extends State<LastTimePage> {
                       Text('งานที่ทำ'),
                       Spacer(),
                       Text('เวลา'),
-                      SizedBox(width: 40)
+                      SizedBox(width: 100)
                     ],
                   ),
                 ),
@@ -108,6 +108,42 @@ class LastTimeState extends State<LastTimePage> {
                                         Text(lastTime.time
                                             .toString()
                                             .substring(0, 10)),
+                                        SizedBox(width: 20),
+                                        IconButton(
+                                          icon: Icon(Icons.delete),
+                                          iconSize: 24.0,
+                                          color: Colors.red,
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    AlertDialog(
+                                                      title: Text(
+                                                          'ต้องการลบหรือไม่'),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child: const Text(
+                                                              'ยกเลิก'),
+                                                          onPressed: () async {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                        TextButton(
+                                                          child: const Text(
+                                                              'ยืนยัน'),
+                                                          onPressed: () async {
+                                                            await lastTime
+                                                                .delete();
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ));
+                                          },
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -116,9 +152,9 @@ class LastTimeState extends State<LastTimePage> {
                             }))
               ]);
             }),
-        floatingActionButton: IconButton(
-          icon: const Icon(Icons.add),
-          tooltip: 'Increase volume by 10',
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          tooltip: 'เพิ่มงาน',
           onPressed: () async {
             TextEditingController title = new TextEditingController();
             TextEditingController mode = new TextEditingController();
@@ -128,7 +164,7 @@ class LastTimeState extends State<LastTimePage> {
                 builder: (BuildContext context) => AlertDialog(
                       title: Text('เพิ่มงานที่ทำ'),
                       content: Container(
-                        height: 200,
+                        height: 150,
                         child: Column(
                           children: [
                             TextField(
